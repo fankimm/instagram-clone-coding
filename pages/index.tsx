@@ -3,17 +3,79 @@ import Image from "next/image";
 import Head from "next/head";
 
 import { setTimeout } from "timers/promises";
+import { NONAME } from "dns";
 interface ITime {
   hours: number;
   minutes: number;
 }
 const Home = () => {
+  const [visible, setVisible] = useState(false);
   const [time, setTime] = useState<ITime>();
+  const [data, setData] = useState([
+    {
+      id: 0,
+      profileThumbLink: "/profile-instagram.png",
+      name: "instagram",
+      likes: 404068,
+      shortBody:
+        "No filter. Lauded as one of his generation's most trusted narrators, artist Cordae (@cordae) remains grounded and focused on making music about life's",
+      fullBody:
+        "No filter. Lauded as one of his generation's most trusted narrators, artist Cordae (@cordae) remains grounded and focused on making music about life's trials and triumphs with a powerful, poetic perspective. ",
+      numberOfReplies: 13087,
+      replies: [],
+      date: "2022-03-21",
+      location: "",
+      photoLinks: ["/post0.jpg"],
+      liked: false,
+      viewMore: false,
+      favorite: false,
+      tags: [],
+    },
+    {
+      id: 1,
+      profileThumbLink: "/profile-fankimm.jpg",
+      name: "fankimm",
+      likes: 74,
+      shortBody: "",
+      fullBody:
+        "싱굴 앨범 나왔어요~, 커버디자인도 해봤습니다., 넘버원코리안 - 달려 (feat. 캡틴란 of 크라잉넛),",
+      numberOfReplies: 10,
+      replise: [
+        { name: "numberonekorean", reply: "디자인 대박" },
+        { name: "jigili_92", reply: "일단은 한국입니닷!" },
+      ],
+      date: "2022-03-16",
+      location: "Seoul",
+      photoLinks: ["/post1.jpeg"],
+      liked: false,
+      viewMore: false,
+      favorite: false,
+      tags: ["캡틴락", "넘버원코리안", "크라잉넛"],
+    },
+    {
+      id: 2,
+      profileThumbLink: "/profile-arianagrande.jpg",
+      name: "arianagrande",
+      likes: 6800000,
+      shortBody: "",
+      fullBody: "chapter two out now @r.e.m.beauty",
+      numberOfReplies: 54,
+      replise: [],
+      date: "2022-03-23",
+      location: "",
+      photoLinks: ["/post2.jpg"],
+      liked: false,
+      viewMore: false,
+      favorite: false,
+      tags: [],
+    },
+  ]);
   const buttonWidth = "2px";
   const volumeButtonHeight = "50px";
   const today = new Date();
   const hours = today.getHours();
   const minutes = `0${today.getMinutes().toString()}`;
+  const repeatCount = [1, 2, 3, 4, 5, 6, 7, 8];
   const testArray = [1, 2, 3, 4, 5];
   // useEffect(() => {
   //   setTimeout(() => {
@@ -26,7 +88,7 @@ const Home = () => {
 
   return (
     <>
-      <div style={{ padding: "20px" }}>
+      <div style={{ padding: "20px", paddingBottom: "0" }}>
         <Head>
           <title>Instagram</title>
         </Head>
@@ -83,6 +145,7 @@ const Home = () => {
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
+              background: "white",
             }}
           >
             <div
@@ -96,13 +159,32 @@ const Home = () => {
               <div
                 className="time"
                 style={{
-                  fontSize: "12px",
+                  fontSize: "13px",
                   width: "70px",
                   textAlign: "center",
+                  fontWeight: "bold",
                 }}
               >
                 {`${hours}:${minutes.slice(-2)}`}
+                {parseInt(minutes, 10) % 2 === 0 ? (
+                  <img
+                    src="/notice-location-using.png"
+                    width={8}
+                    height={10}
+                    style={{ marginLeft: "4px" }}
+                    alt="location-using"
+                  />
+                ) : (
+                  <img
+                    src="/notice-location-used.png"
+                    width={8}
+                    height={10}
+                    style={{ marginLeft: "4px" }}
+                    alt="location-used"
+                  />
+                )}
               </div>
+
               <div
                 className="notch"
                 style={{
@@ -116,6 +198,8 @@ const Home = () => {
                 className="status"
                 style={{
                   width: "70px",
+                  display: "flex",
+                  alignItems: "end",
                 }}
               >
                 <div
@@ -134,15 +218,18 @@ const Home = () => {
                     alt="wifi-icon"
                   />
                   <img
-                    src="/battery.png"
+                    src="/battery-outline.png"
                     width={22}
                     height={10}
                     alt="battery"
                   />
+                  <div className="batteryPercent"></div>
                 </div>
               </div>
             </div>
             <div className="iphoneContent" style={{ height: "100%" }}>
+              <div className="volumeBarBackground"></div>
+              <div className="volumeBar"></div>
               <div
                 className="appContainer"
                 style={{
@@ -164,31 +251,81 @@ const Home = () => {
                     borderBottom: "1px solid lightgray",
                   }}
                 >
-                  <div
-                    className="appLeftSide"
-                    // style={{ display: "flex", alignItems: "center" }}
-                  >
-                    <div
-                      className="logoAndArrow"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100px",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <img
-                        src="/letter-logo.png"
-                        width={88}
-                        height={24}
-                        alt="letter-logo"
-                      />
-                      <img
-                        src="/down-arrow.png"
-                        width={7}
-                        height={5}
-                        alt="down-arrow"
-                      />
+                  <div className="appLeftSide">
+                    <div className="logoAndArrow">
+                      <div
+                        className="dropdown"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          width: "100px",
+                          justifyContent: "space-between",
+                        }}
+                        onClick={() => setVisible(!visible)}
+                      >
+                        <img
+                          src="/letter-logo.png"
+                          width={88}
+                          height={24}
+                          alt="letter-logo"
+                        />
+                        <img
+                          src="/down-arrow.png"
+                          width={7}
+                          height={5}
+                          alt="down-arrow"
+                        />
+                      </div>
+                      {visible ? (
+                        <div className="dropdownContent">
+                          <div
+                            className="dropDown-1"
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            팔로잉
+                            <svg
+                              aria-label="좋아요"
+                              color="#262626"
+                              fill="#262626"
+                              height="18"
+                              role="img"
+                              viewBox="0 0 24 24"
+                              width="18"
+                            >
+                              <path d="M16.792 3.904A4.989 4.989 0 0121.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 014.708-5.218 4.21 4.21 0 013.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 013.679-1.938m0-2a6.04 6.04 0 00-4.797 2.127 6.052 6.052 0 00-4.787-2.127A6.985 6.985 0 00.5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 003.518 3.018 2 2 0 002.174 0 45.263 45.263 0 003.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 00-6.708-7.218z"></path>
+                            </svg>
+                          </div>
+                          <div
+                            className="dropDown-2"
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            즐겨찾기
+                            <svg
+                              aria-label="댓글 달기"
+                              color="#262626"
+                              fill="#262626"
+                              height="18"
+                              role="img"
+                              viewBox="0 0 24 24"
+                              width="18"
+                            >
+                              <path
+                                d="M20.656 17.008a9.993 9.993 0 10-3.59 3.615L22 22z"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                              ></path>
+                            </svg>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                   <div
@@ -259,9 +396,9 @@ const Home = () => {
                     overflow: "scroll",
                   }}
                 >
-                  {testArray.map((item) => {
+                  {data.map((item) => {
                     return (
-                      <div key={item} className="post">
+                      <div key={item.id} className="post">
                         <div
                           className="postHeader"
                           style={{
@@ -278,32 +415,41 @@ const Home = () => {
                             <div
                               className="profilePhoto"
                               style={{
-                                width: "20px",
-                                height: "20px",
-                                background: `rgb(95,73,149)`,
+                                // background: `rgb(95,73,149)`,
                                 marginRight: "8px",
-                                borderRadius: "50%",
+                                borderRadius: "70%",
+                                overflow: "hidden",
+                                width: "25px",
+                                height: "25px",
                               }}
-                            ></div>
-                            <div className="idAndLocation">
+                            >
+                              <img
+                                src={item.profileThumbLink}
+                                width={25}
+                                height={25}
+                              />
+                            </div>
+                            <div className="nameAndLocation">
                               <div
-                                className="id"
+                                className="name"
                                 style={{
                                   fontSize: "10px",
                                   fontWeight: "bolder",
                                 }}
                               >
-                                fankimm
+                                {item.name}
                               </div>
-                              <div
-                                className="location"
-                                style={{
-                                  fontSize: "10px",
-                                  fontWeight: "lighter",
-                                }}
-                              >
-                                강남구 테헤란로 501
-                              </div>
+                              {item.location && (
+                                <div
+                                  className="location"
+                                  style={{
+                                    fontSize: "10px",
+                                    fontWeight: "lighter",
+                                  }}
+                                >
+                                  {item.location}
+                                </div>
+                              )}
                             </div>
                           </div>
                           <div className="postRightSide">
@@ -327,11 +473,15 @@ const Home = () => {
                           style={{
                             width: "100%",
                             height: "280px",
-                            background: `rgb(${95 * item},${79 + item * 5},${
-                              149 - item * 20
-                            })`,
                           }}
-                        ></div>
+                        >
+                          <img
+                            src={item.photoLinks[0]}
+                            width={270}
+                            height={270}
+                            alt={item.id.toString()}
+                          />
+                        </div>
                         <div
                           className="postButtons"
                           style={{
@@ -440,19 +590,45 @@ const Home = () => {
                               fontSize: "10px",
                               padding: "4px 8px",
                               display: "flex",
+                              flexDirection: "column",
                             }}
                           >
                             <div
                               className="postBody-id"
                               style={{ marginRight: "5px", fontWeight: "bold" }}
                             >
-                              fankimm
+                              {item.name}
+                              <span
+                                style={{
+                                  fontWeight: "normal",
+                                  marginLeft: "5px",
+                                }}
+                              >
+                                {item.fullBody.split(",")[0]}
+                              </span>
                             </div>
+
                             <div
                               className="postBody-content"
                               style={{ marginRight: "5px" }}
                             >
-                              react html css typescript...
+                              {item.fullBody.split(",").splice(1)}
+                            </div>
+                            <div
+                              className="tagsContainer"
+                              style={{ display: "flex" }}
+                            >
+                              {item.tags.map((t, idx) => (
+                                <div
+                                  key={`${t}${idx}`}
+                                  className="tags"
+                                  style={{
+                                    color: "darkblue",
+                                    marginRight: "3px",
+                                    cursor: "pointer",
+                                  }}
+                                >{`#${t}`}</div>
+                              ))}
                             </div>
                             <div
                               className="postBody-more-button"
@@ -578,6 +754,15 @@ const Home = () => {
                   borderRadius: "4px",
                 }}
               ></div>
+              {/* <div
+                className="maskingBox"
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  background: "red",
+                  // marginTop: "20px",
+                }}
+              ></div> */}
             </div>
           </div>
           <div className="rightSide">
@@ -593,7 +778,89 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="footer">
+      {/* <div
+        className="charger"
+        style={{
+          zIndex: "100",
+          margin: "auto",
+          // marginTop: "20px",
+          marginTop: "-30px",
+        }}
+      >
+        <div
+          className="chargerHeader"
+          style={{
+            width: "30px",
+            height: "28px",
+            background: "rgb(180,180,180)",
+            margin: "auto",
+            borderRadius: "6px 6px 0 0",
+          }}
+        >
+          <div
+            className="chargeHeadWhite"
+            style={{
+              display: "block",
+              position: "absolute",
+              background: "white",
+              width: "24px",
+              height: "11px",
+              borderRadius: "2px",
+              marginLeft: "3px",
+              marginTop: "2px",
+            }}
+          >
+            <div
+              className="chargerHeaderDetailContainer"
+              style={{ display: "flex", justifyContent: "space-around" }}
+            >
+              {repeatCount.map((item) => {
+                return (
+                  <div
+                    className="chargeHeaderPort1"
+                    style={{
+                      width: "1px",
+                      height: "6px",
+                      background: "grey",
+                      marginTop: "2px",
+                    }}
+                  ></div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        <div
+          className="chargerBody"
+          style={{
+            width: "40px",
+            height: "60px",
+            background: "rgb(245,245,245)",
+            margin: "auto",
+            // boxShadow: "-1px -1px 80px 0px",
+          }}
+        ></div>
+        <div
+          className="chargeTail"
+          style={{
+            width: "17px",
+            height: "40px",
+            background: "rgb(235,235,235)",
+            margin: "auto",
+            // boxShadow: "0 0 16px 1px",
+          }}
+        ></div>
+        <div
+          className="chargeCable"
+          style={{
+            width: "11px",
+            height: "70px",
+            background: "rgb(230,230,230)",
+            margin: "auto",
+          }}
+        ></div>
+      </div> */}
+      <div className="footer" style={{ marginBottom: "20px" }}>
         <div
           className="copyright"
           style={{
@@ -615,36 +882,45 @@ const Home = () => {
             margin: "auto",
           }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-github"
-            viewBox="0 0 16 16"
+          <a href="https://github.com/fankimm" target="blank">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-github"
+              viewBox="0 0 16 16"
+            >
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+          </a>
+          <a
+            href="https://www.youtube.com/channel/UC74IqnX_ErzSIwhGSuE-ZwA"
+            target="blank"
           >
-            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-          </svg>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-youtube"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z" />
-          </svg>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-instagram"
-            viewBox="0 0 16 16"
-          >
-            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z" />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-youtube"
+              viewBox="0 0 16 16"
+            >
+              <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z" />
+            </svg>
+          </a>
+          <a href="https://instagram.com/fankimm" target="blank">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-instagram"
+              viewBox="0 0 16 16"
+            >
+              <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z" />
+            </svg>
+          </a>
         </div>
       </div>
     </>
